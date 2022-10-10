@@ -65,11 +65,12 @@ app.post('/todos', (req,res) => {
 
 app.post('/todos/:id/edit', (req, res) => {
   const id = req.params.id  //用的id
-  const name = req.body.name   //使用者輸入的表單內容
+  const { name, isDone } = req.body   //使用者輸入的表單內容,拿取對應參數
 
   return Todo.findById(id) //呼叫Todo，用id找到對應資料(使用者改id頁面的id去找)
     .then(todo => { //不使用lean是因為還不需要解析資料
       todo.name = name //資料庫裡的name變成使用者輸入的name
+      todo.isDone = (isDone ==='on')
       return todo.save()
     })
     .then(() => res.redirect(`/todos/${id}`))  //新增完成後導回詳細頁，確認輸入資料
